@@ -25,8 +25,7 @@ make qemu_aarch64_virt_defconfig
 make menuconfig
 ```
 **Upewnijcie się, że okienko terminalu jest wystarczająco duże:**
-
-![Small_display](sczr_lab1/screenshots/small_display.png)
+![Small_display](/sczr_lab1/screenshots/small_display.png)
 
 **Musimy odnaleźć i zaznaczyć następujące opcję:**
 - Toolchain -> Toolchain type -> External toolchain
