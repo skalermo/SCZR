@@ -52,6 +52,7 @@ int main(int argc, char* argv[]) {
     // argv[2] = timeout
     if (argc != 3) {
         printf("Usage: %s hostname timeout\n", argv[0]);
+	return 0;
     }
 
     // Create Socket
