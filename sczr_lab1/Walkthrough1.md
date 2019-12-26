@@ -137,3 +137,58 @@ Na maszynie wirtualnej odpalamy nasz program z dwoma parametrami:
 - maszyna wirtualna: `./cw1m 10.0.2.2 your_timeout`
 
 jeśli z jakiegoś powodu nie uda się połączyć z 10.0.2.2 należy spróbować 10.0.2.3.
+
+## OpenWRT
+
+```console
+$ cd OWRT
+$ ls
+cw1_owrt_pkg  owrt_ext4_9p.sh  owrt_ext4.sh  owrt_irfs_9p.sh  owrt_irfs.sh
+$ wget https://downloads.openwrt.org/releases/18.06.4/targets/armvirt/64/openwrt-18.06.4-armvirt-64-Image
+$ wget https://downloads.openwrt.org/releases/18.06.4/targets/armvirt/64/openwrt-18.06.4-armvirt-64-root.ext4.gz
+$ gzip -d openwrt-18.06.4-armvirt-64-root.ext4.gz
+$ ls
+cw1_owrt_pkg                          owrt_ext4_9p.sh  owrt_irfs.sh
+openwrt-18.06.4-armvirt-64-Image      owrt_ext4.sh
+openwrt-18.06.4-armvirt-64-root.ext4  owrt_irfs_9p.sh
+```
+Pobrany obraz OpenWRT będzie wymagał konfiguracji sieci (zmienić kilka plików). By nie robić tego za każdym razem po uruchomieniu w przypadku initramfs radziłbym skorzystać z wersji z wirtualnym dyskiem.
+
+Aby odpalić obraz należy skorzystać z udostępnionych skryptów (np `owrt_ext4_9p.sh`)
+Wersja ściągniętego obrazu nie zgadza się z wersją wpisaną w skryptach (trzeba zmienić 18.06.2 na 18.06.4)
+![OWRT_different_versions](/sczr_lab1/screenshots/owrt_different_versions.png)
+Po odpaleniu skryptu system owrt powinien się uruchomić. Jeśli terminal się nie pojawia należy aktywować go wciskając Enter.
+
+Domyślnie interfejs w OpenWRT nie jest skonfigurowany. Można go skonfigurować w taki sposób:
+```console
+root@OpenWrt:/# ping google.com
+ping: bad address 'google.com'
+root@OpenWrt:/# cat /etc/config/network 
+...
+config interface 'lan'
+	option type 'bridge'
+	option ifname 'eth0'
+	option proto 'static'
+	option ipaddr '192.168.1.1'
+	option netmask '255.255.255.0'
+	option ip6assign '60'
+
+root@OpenWrt:/# vim /etc/config/network
+# (w tym kroku modyfikujemy plik, mamy dostać to co poniżej)
+root@OpenWrt:/# cat /etc/config/network 
+...
+config interface 'lan'
+	option ifname 'eth0'
+	option proto 'dhcp'
+
+root@OpenWrt:/# /etc/init.d/network reload
+root@OpenWrt:/# rm /etc/rc.d/S19dnsmasq 
+root@OpenWrt:/# ping google.com
+PING google.com (216.58.215.110): 56 data bytes
+64 bytes from 216.58.215.110: seq=0 ttl=255 time=31.702 ms
+64 bytes from 216.58.215.110: seq=1 ttl=255 time=40.040 ms
+^C
+...
+```
+
+Jeśli był to obraz systemu z wirtualnym dyskiem wszystkie te zmiany zostaną zapisane czyli przy następnym uruchomieniu powinniśmy mieć już skonfigurowany interfejs. (Ewentualnie trzeba będzie trochę poczekać na usługi systemowe owrt, które nie zdążyły się odpalić)
