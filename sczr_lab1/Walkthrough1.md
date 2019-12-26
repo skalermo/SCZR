@@ -152,11 +152,12 @@ cw1_owrt_pkg                          owrt_ext4_9p.sh  owrt_irfs.sh
 openwrt-18.06.4-armvirt-64-Image      owrt_ext4.sh
 openwrt-18.06.4-armvirt-64-root.ext4  owrt_irfs_9p.sh
 ```
-Pobrany obraz OpenWRT będzie wymagał konfiguracji sieci (zmienić kilka plików). By nie robić tego za każdym razem po uruchomieniu w przypadku initramfs radziłbym skorzystać z wersji z wirtualnym dyskiem.
+Pobrany obraz OpenWRT będzie wymagał konfiguracji interfejsu sieciowego (zmienić kilka plików). By nie robić tego za każdym razem po uruchomieniu w przypadku initramfs radziłbym skorzystać z wersji z wirtualnym dyskiem.
 
 Aby odpalić obraz należy skorzystać z udostępnionych skryptów (np `owrt_ext4_9p.sh`)
 Wersja ściągniętego obrazu nie zgadza się z wersją wpisaną w skryptach (trzeba zmienić 18.06.2 na 18.06.4)
 ![OWRT_different_versions](/sczr_lab1/screenshots/owrt_different_versions.png)
+
 Po odpaleniu skryptu system owrt powinien się uruchomić. Jeśli terminal się nie pojawia należy aktywować go wciskając Enter.
 
 Domyślnie interfejs w OpenWRT nie jest skonfigurowany. Można go skonfigurować w taki sposób:
