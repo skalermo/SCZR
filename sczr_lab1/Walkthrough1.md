@@ -136,8 +136,6 @@ Na maszynie wirtualnej odpalamy nasz program z dwoma parametrami:
 - gosodarz: `nc -lv 10000`
 - maszyna wirtualna: `./cw1m 10.0.2.2 your_timeout`
 
-jeśli z jakiegoś powodu nie uda się połączyć z 10.0.2.2 należy spróbować 10.0.2.3.
-
 ## OpenWRT
 
 ```console
@@ -231,7 +229,50 @@ W tym samym katalogu wykonujemy polecenia
 $ export LANG=C
 $ scripts/feeds update sczr
 $ scripts/feeds install -p sczr -a
+$ make menuconfig
 ```
 
 Jeśli postępowaliście zgodnie z tym jak powyżej, to po uruchomieniu `make menuconfig` powinniście zobaczyć coś takiego:
-![OWRT_menuconfig](/sczr_lab1/screenshots/owrt_menuconfig.png)
+![OWRT_menuconfig_packages](/sczr_lab1/screenshots/owrt_menuconfig_packages.png)
+
+Klikamy 'Exit' potwierdzając zachowanie zmian (choć tak naprawdę tylko sprawdziliśmy czy jest nasz pakiet).
+
+Jeśli nie ma opcji 'Examples' albo pakietu 'cwiczenie1' oznacza to że gdzieś po drodze coś źle zrobiliście. W takim przypadku sugerowałbym sprawdzić poprawność wklejonej wcześniej ścieżki i poprawność wpisywanych komend.
+
+Następnym krokiem jest skompilowanie naszego pakietu:
+`$ make package/cwiczenie1/compile`
+Chcemy zobaczyć te 4 pomarańczowe linii, oznacza to, że kompilacja zakończyła się powodzeniem.
+![Success_compilation](/sczr_lab1/screenshots/successful_compilation.png)
+
+W przypadku takim:
+![Failed_compilation](/sczr_lab1/screenshots/failed_compilation.png)
+
+sugerowałbym najpierw odpalić komendę `make package/cwiczenie1/clean`, po czym szukać przyczynę błędu (tutaj doprowadziłem do błędu zmieniając nazwę folderu `/cw1_owrt_pkg/cwiczenie1`, mi się wydaje że **nazwa folderu powinna być taka sama co nazwa pakietu**, co w sumie jest logiczne). 
+
+Po naprawieniu błedów ponownie kompilujemy pakiet: `make package/cwiczenie1/compile`
+
+Teraz mając skompilowany pakiet chcemy go przerzucić do naszej maszyny wirtualnej.
+Opiszę sposób z 9p.
+
+Pakiet skompilowany leży w `.../openwrt-sdk-18.06.4-armvirt-64_gcc-7.3.0_musl.Linux-x86_64/bin/packages/aarch64_generic/sczr`.
+W skrypcie owrt_ext4_9p.sh zmieniamy zmienną *`path`* odpowiednio do lokalizacji naszego pakietu. 
+
+Po tej operacji odpalamy skrypt.
+Znajdujemy nasz pakiet i kompilujemy go.
+
+```console
+root@OpenWrt:~# mount -t 9p h /mnt
+root@OpenWrt:~# cd /mnt
+root@OpenWrt:/mnt# ls
+cwiczenie1_1.0-1_aarch64_generic.ipk
+root@OpenWrt:/mnt# opkg install cwiczenie1_1.0-1_aarch64_generic.ipk 
+Installing cwiczenie1 (1.0-1) to root...
+Configuring cwiczenie1.
+root@OpenWrt:/mnt# cw1m 10.0.2.2 1
+...
+```
+Jeśli wcześniej ten pakiet już był zainstalowany używamy opcji `--force-reinstall` :
+
+`opkg install --force-reinstall cwiczenie1_1.0-1_aarch64_generic.ipk`
+
+Dalej postępujemy analogicznie jak w przypadku Buildroot'a.
