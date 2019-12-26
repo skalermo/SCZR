@@ -258,7 +258,7 @@ Pakiet skompilowany leży w `.../openwrt-sdk-18.06.4-armvirt-64_gcc-7.3.0_musl.L
 W skrypcie owrt_ext4_9p.sh zmieniamy zmienną *`path`* odpowiednio do lokalizacji naszego pakietu. 
 
 Po tej operacji odpalamy skrypt.
-Znajdujemy nasz pakiet i kompilujemy go.
+Znajdujemy nasz pakiet i instalujemy go.
 
 ```console
 root@OpenWrt:~# mount -t 9p h /mnt
