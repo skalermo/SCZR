@@ -193,3 +193,45 @@ PING google.com (216.58.215.110): 56 data bytes
 ```
 
 Jeśli był to obraz systemu z wirtualnym dyskiem wszystkie te zmiany zostaną zapisane czyli przy następnym uruchomieniu powinniśmy mieć już skonfigurowany interfejs. (Ewentualnie trzeba będzie trochę poczekać na usługi systemowe owrt, które nie zdążyły się odpalić)
+
+## Kompilacja pakietu i uruchomienie
+
+Pobieramy i rozpakowujemy środowisko OpenSDK:
+```console
+$ wget https://downloads.openwrt.org/releases/18.06.4/targets/armvirt/64/openwrt-sdk-18.06.4-armvirt-64_gcc-7.3.0_musl.Linux-x86_64.tar.xz
+$ tar -xJf openwrt-sdk-18.06.4-armvirt-64_gcc-7.3.0_musl.Linux-x86_64.tar.xz
+```
+**Przygotujmy folder z kodem źródłowym do kompilacji:**
+```console
+$ cd cw1_owrt_pkg
+$ ls
+cwicz1mak  cwiczenie1
+# Folder cwicz1mak możemy usunąć, wystarczy nam tylko jednego
+$ rm -r cwicz1mak
+$ cd cwiczenie1
+$ ls
+Makefile  src
+# Jeśli chcemy zmienić nazwę pakietu (i tak naprawdę jeszcze dużo czego) to można pogrzebać w Makefile (choć lepiej nie)
+$ cd src
+$ ls
+cw1m.c
+# W folderze src leży plik cw1m.c, zamieniamy go naszym kodem
+# Skopiujemy ścieżkę do foldery pakietu
+$ cd ../..
+$ pwd
+/home/skalermo/SCZR/sczr_lab1/OWRT/cw1_owrt_pkg <-- skopiować to (w terminalu Ctrl+Shift+C)
+```
+Wracamy do katalogu SDK.
+Na końcu pliku 'feeds.conf.default' dopisujemy linię
+
+`src-link sczr` *`skopiowana_ścieżka`*
+
+W tym samym katalogu wykonujemy polecenia
+```console
+$ export LANG=C
+$ scripts/feeds update sczr
+$ scripts/feeds install -p sczr -a
+```
+
+Jeśli postępowaliście zgodnie z tym jak powyżej, to po uruchomieniu `make menuconfig` powinniście zobaczyć coś takiego:
+![OWRT_menuconfig](/sczr_lab1/screenshots/owrt_menuconfig.png)
