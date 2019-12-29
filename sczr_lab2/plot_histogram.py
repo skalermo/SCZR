@@ -10,7 +10,11 @@ if __name__ == "__main__":
         description="SCZR histogram",
     )
 
+    # parser.add_argument('plik', help="Plik server.txt lub cli_*.txt")
+    
+    # This line allows to take multiple arguments
     parser.add_argument('pliki', nargs='+', help="Pliki server.txt lub cli_*.txt")
+    
     parser.add_argument('-s', action='store_true', help="Zapisz histogram do pliku .png")
     args = parser.parse_args()
 
@@ -18,12 +22,12 @@ if __name__ == "__main__":
 
         data = []
 
-        aux = open(plik, 'r')
-        for l in aux:
-            l = l.replace(',', ' ')
-            data.append(int(l.split()[-1]))
-        file_name = plik.split('/')[-1]
-        aux.close()
+        with open(plik, 'r') as aux:
+            for l in aux:
+                l = l.replace(',', ' ')
+                data.append(int(l.split()[-1]))
+            file_name = plik.split('/')[-1]
+            
         if file_name == 'server.txt':
             tytul = 'server'
         else:
@@ -31,6 +35,8 @@ if __name__ == "__main__":
             delay = file_name.replace('.','_').split('_')[2]
             num_cpus = file_name.replace('.','_').split('_')[3]
             # tytul = f"CPUs = {num_cpus}, client = {client_number}, N = {str(len(data))}, delay = {delay}"
+            
+            # python2/3 compatible
             tytul = "CPUs = %s, client = %s, N = %s, delay = %s" % (num_cpus, client_number, len(data), delay)
 
         plt.figure()
