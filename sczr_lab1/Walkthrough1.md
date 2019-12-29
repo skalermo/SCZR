@@ -119,7 +119,7 @@ Istnieje kilka sposobów:
     - maszyna wirtualna: `wget 10.0.2.2:1234/*jakiś_plik*`
     
     
-4. 9P (nie wymaga rekompilacji). Nie udało mi się zmusić to działać, dostawałem błąd
+4. 9P *(nie wymaga rekompilacji)*. Nie udało mi się zmusić to działać, dostawałem błąd
     `mount: mounting h on /mnt failed: No such device`
     
 Rekompilację przeprowadzamy poleceniem `make`. W porównaniu do pełnej kompilacji trwa niedługo.
@@ -133,7 +133,7 @@ Na maszynie wirtualnej odpalamy nasz program z dwoma parametrami:
 - timeout - symulowane opóźnienie
 
 
-- gosodarz: `nc -lv 10000`
+- gospodarz: `nc -lv 10000`
 - maszyna wirtualna: `./cw1m 10.0.2.2 your_timeout`
 
 ## OpenWRT
