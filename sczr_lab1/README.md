@@ -1,4 +1,6 @@
-Proszę zapoznać się z plikiem ![Walkthrough1.md](/sczr_lab1/Walkthrough1.md).
+Plik ![SCZR_LabV2_Cw1.pdf](/sczr_lab1/SCZR_LabV2_Cw1.pdf) zawiera informacje wstępne i zadania do laboratorium 1.
+
+Rozwiązanie zadań znajduje się w pliku ![Walkthrough1.md](/sczr_lab1/Walkthrough1.md).
 
 Uwagi:
 - Wszystkie czynności opisane w przewodniku dokonywałem w systemie Archlinux, więc jest szansa że będziecie musieli coś zrobić w sposób inny niż opisano tutaj.
