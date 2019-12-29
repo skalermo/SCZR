@@ -8,20 +8,22 @@ Korzystacie z tych materiałów na własną odpowiedzialność. Kod źródłowy 
 
 ## Wymagania
 
-Linux
+- system operacyjny Linux
+- połączenie sieciowe
+- zainstalowane podstawowe programy (edytor tekstowy, archiwizator, kompilator etc).
 
 ## Od czego zacząć
 
-Rekomendowałbym najpierw zapoznać się ze slajdami z wykładów oraz instrukcjami na stronie przedmiotu, ponieważ zawierają w sobie wszystkie najistotniejsze informacje (i też sporo niezbyt przydatnych rzeczy).
+Rekomendowałbym najpierw zapoznać się ze **slajdami z wykładów** oraz z **plikami na stronie przedmiotu**, ponieważ zawierają w sobie wszystkie najistotniejsze informacje (i też sporo niezbyt przydatnych rzeczy).
 
-Laboratoriom w tym repo będą odpowiadały foldery, w każdym z których znajdziecie plik `WalkthroughX.md` zawierający *przykładowe* postępowania dla wykonania zadań. Także znajdziecie pliki dodatkowe (kod źródłowy, skrypty etc). 
+Laboratoriom w tym repo będą odpowiadały foldery, w każdym z których znajdziecie plik **`WalkthroughX.md`** zawierający *przykładowe* postępowania dla wykonania zadań. Także znajdziecie pliki dodatkowe (kod źródłowy, skrypty etc). 
 
 ## Feedback
 
-Jestem otwarty na wszelkiego rodzaju uwagi i rekomendacje w celu ulepszenia materiałów. Także proszę zgłaszać pomyłki i błędy. W czasie wolnym od odpoczynku postaram się naprawić.
+Jestem otwarty na wszelkiego rodzaju uwagi i rekomendacje w celu ulepszenia jakości materiałów. Także proszę w razie znalezienia zgłaszać pomyłki i błędy. W czasie wolnym od odpoczynku będę starał się je naprawiać.
 
 ## Podziękowania
 
-Chciałbym wyrazić wdzięczność następującym osobom (bez nich laby nie poszłyby mi tak dobrze:)
+Chciałbym wyrazić wdzięczność następującym osobom:
 - [rafalb8](https://github.com/rafalb8)
 - [KostkaBrukowa](https://github.com/KostkaBrukowa)
