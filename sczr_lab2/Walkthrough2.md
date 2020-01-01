@@ -32,3 +32,38 @@ Sample 1, client 1, delivery time: 54
 ...
 ```
 
+## Zadania 3-4
+
+**Jak wyznaczyć kiedy system przestaje nadążać przetwarzać dane w czasie rzeczywistym?**
+
+Zadając odpowiedni argument czasu przetwarzania (czwarty argument) możemy wymusić ciągły wzrost czasu opóźnienia. Postarałem się zilustrować to w poniższej tabeli:
+
+|| Nadąża | Nie nadąża |
+| --- | --- | --- |
+| Polecenie | `./cw2a 1 200 10000` **`50000`** | `./cw2a 1 200 10000` **`1500000`** |
+| Dane wyjściowe | ![keepingup](/sczr_lab2/screenshots/keepingup.png) | ![notkeepingup](/sczr_lab2/screenshots/notkeepingup.png) |
+| Wykres | ![keepingup_plot](/sczr_lab2/screenshots/keepingup_plot.png) | ![notkeepingup_plot](/sczr_lab2/screenshots/notkeepingup_plot.png) |
+
+Zadanie polega na tym żeby znaleść czas przetwarzania jak najmniejszy przy którym system przestaje nadążać.
+
+W zadaniu czwartym czeka na was co najmniej 6 wykresów (kombinacji dla 1 i 3 klientów oraz dla 1, 2 i 4 rdzeni cpu). Przygotowane skrypty ![owrt_ext4_9p.sh](/sczr_lab2/owrt_ext4_9p.sh) i ![plot_histogram.py](/sczr_lab2/plot_histogram.py) powinne trochę uprościć sprawę.
+
+Reszta zadania jest raczej trywialna.
+
+## Zadanie 5
+
+Oczekiwanie aktywne możemy osiągnąć używając `pthread_mutex_trylock()` zamiast `pthread_mutex_lock` i usuwając `pthread_cond_wait()`. W przypadku oczekiwania aktywnego na jednym kliencie wystarczy dodać warunek na sprawdzenie numeru klienta (interesuje nas zerowy).
+
+| Oczekiwanie w uśpieniu | 1 aktywny | wszystkie aktywne |
+| --- | --- | --- |
+| ![beforechange](/sczr_lab2/screenshots/client_beforechange.png) | ![change1](/sczr_lab2/screenshots/client_change1.png) | ![changeall](/sczr_lab2/screenshots/client_changeall.png) |
+
+## Zadanie 6
+
+![badserver](/sczr_lab2/screenshots/badserver.png)
+
+Ten rysunek pokazuje stan serwera po ostatniej zmianie w zadaniu piątym (klienci oczekują aktywnie). Aby wygenerować go, należy usunąć pierwszą linijkę z pliku `server.txt`. 
+
+Jak widać nie zachowano początkowej wartości okresu próbkowania równej 10000. 
+
+Związano to z tym, że w kodzie programu serwera użyto funkcji `sleep`, która nie jest dobrym rozwiązaniem w przypadku problemów czasu rzeczywistego
