@@ -64,6 +64,21 @@ Oczekiwanie aktywne możemy osiągnąć używając `pthread_mutex_trylock()` zam
 
 Ten rysunek pokazuje stan serwera po ostatniej zmianie w zadaniu piątym (klienci oczekują aktywnie). Aby wygenerować go, należy usunąć pierwszą linijkę z pliku `server.txt`. 
 
-Jak widać nie zachowano początkowej wartości okresu próbkowania równej 10000. 
+Jak widać nie zachowano początkowej wartości okresu próbkowania równej 10000. Wykres został przesunięty wprawo. Związano to z tym, że nie uwzględniono czasu, który przechodzi pomiędzy uśpieniem przez funkcję `sleep`, a pomiarem czasu przez program. W tym czasie program stoi na muteksie, wykonuje zapis do plików, ewentualnie jest wywłaszczany przez system operacyjny.
 
-Związano to z tym, że w kodzie programu serwera użyto funkcji `sleep`, która nie jest dobrym rozwiązaniem w przypadku problemów czasu rzeczywistego
+![server_beforechange_code](/sczr_lab2/screenshots/server_beforechange_code.png)
+
+**Odejmowanie czasu**
+
+Możemy uwzględnić ten czas dodatkowy. W uśpieniu program będzie krócej o wartość tego czasu dodatkowego (odejmujemy od `udelsmp` czas dodatkowy). Realizację tego pomysłu znajdziecie w pliku ![cw2a_sleep.c](/sczr_lab2/cw2a_sleep.c).
+
+![goodserver_sleep](/sczr_lab2/screenshots/goodserver_sleep.png)
+
+**Użycie timerfd**
+
+Innym rozwiązaniem jest wykorzystanie *`timera`* zamiast mniej precyzyjnej funkcji *`sleep`*.
+Realizacja w pliku ![cw2a_timerfd.c](/sczr_lab2/cw2a_timerfd.c).
+
+![goodserver_timerfd](/sczr_lab2/screenshots/goodserver_timerfd.png)
+
+Zwróćcie uwagę, że przy użyciu *`timera`* próbki zaczynają pojawiać się po lewej stronie od wartości 10000. Dzieje się tak dlatego że jeśli jakaś próbka z jakiegoś powodu spóźnia się (jest po prawej stronie) następna będzie miała okres mniejszy od 10000, tak że wartośc uśredniona będzie zbliżona do zadanego okresu próbkowania (10000).
