@@ -68,9 +68,11 @@ Jak widać nie zachowano początkowej wartości okresu próbkowania równej 1000
 
 ![server_beforechange_code](/sczr_lab2/screenshots/server_beforechange_code.png)
 
+### Rozwiązanie
+
 **Odejmowanie czasu**
 
-Możemy uwzględnić ten czas dodatkowy. W uśpieniu program będzie krócej o wartość tego czasu dodatkowego (odejmujemy od `udelsmp` czas dodatkowy). Realizację tego pomysłu znajdziecie w pliku ![cw2a_sleep.c](/sczr_lab2/cw2a_sleep.c).
+Możemy uwzględnić ten czas dodatkowy spędzany w programie. W uśpieniu program będzie znajdował się krócej o wartość tego czasu dodatkowego (odejmujemy od `udelsmp` czas dodatkowy). Realizację tego pomysłu znajdziecie w pliku ![cw2a_sleep.c](/sczr_lab2/cw2a_sleep.c).
 
 ![goodserver_sleep](/sczr_lab2/screenshots/goodserver_sleep.png)
 
