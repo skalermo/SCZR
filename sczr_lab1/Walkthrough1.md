@@ -93,7 +93,7 @@ Polecenia `date` i `ping` potwierdzą że pierwsze zadanie jest wykonane (zdarza
 
 ## Program
 
-[Tutaj](sczr_lab1/cw1m.c) można znaleźć moją realizację zadania. 
+[Tutaj](/sczr_lab1/cw1m.c) można znaleźć moją realizację zadania. 
 
 Komunikaty przechowywane w liście dwukierunkowej, komunikacja odbywa się za pomocą sokietów.
 Synchronizacja jest *poprawna* (sprawdzający nie znalazł do czego się przyczepić).
