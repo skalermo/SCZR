@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
         loops_count = atoi(argv[2]);
     }
 
-    if ((fd = open("/dev/my_tim0", O_RDWR | O_SYNC)) == 0)
+    if ((fd = open("/dev/my_tim0", O_RDWR | O_SYNC)) < 0)
     {
         printf("Failed to open 'my_tim0' device.\n");
         return 1;
@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
     {
         while(((regs->stat) & 0x80000000) == 0x80000000);
         cur_time = regs->cntl;
-        printf("%d, %d\n", i, cur_time);
+        printf("%d %d\n", i, cur_time);
         regs->cntl = 0x0;
     }
 

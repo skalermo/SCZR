@@ -31,12 +31,13 @@ int main(int argc, char *argv[])
     if (argc != 3)
     {
         printf("Usage: %s period loops_count\n", argv[0]);
+        return 0;
     } else {
         period = atoi(argv[1]);
         loops_count = atoi(argv[2]);
     }
     
-    if ((fd = open("/dev/my_tim0", O_RDWR | O_SYNC)) == 0)
+    if ((fd = open("/dev/my_tim0", O_RDWR | O_SYNC)) < 0)
     {
         printf("Failed to open 'my_tim0' device.\n");
         return 1;
