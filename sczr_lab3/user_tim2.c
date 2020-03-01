@@ -24,54 +24,62 @@ int main(int argc, char *argv[])
     WzTim1Regs * volatile regs;
     //[...] To be filled with your code
 
+    uint64_t period;         // nanoseconds 
+    uint64_t time_passed;
 
-    // to make our life easier
-    // we work only with lower half 
-    // of timer's registers
-    uint32_t period;         // nanoseconds 
-    uint32_t cur_time;
-
-    int loops_count;
+    int loop_count;
 
     if (argc != 3)
     {
         printf("Usage: %s period loops_count\n", argv[0]);
         return 0;
-    } else {
-        period = atoi(argv[1]);
-        loops_count = atoi(argv[2]);
     }
 
+    period = strtoul(argv[1], NULL, 0);
+    loop_count = atoi(argv[2]);
+    
     if ((fd = open("/dev/my_tim0", O_RDWR | O_SYNC)) < 0)
     {
         printf("Failed to open 'my_tim0' device.\n");
         return 1;
     }
 
-    // 0x1000 is equivalent to 4096 bytes
-    // which is size of 1 page unit (block)
-    // it is the minimal memory size which can be allocated using mmap
-
-    // 0x900a000 is an offset of our device's registers in memory
-    if ((regs = (WzTim1Regs*)mmap(NULL, 0x1000, PROT_READ | PROT_WRITE, MAP_SHARED,fd, 0x900a000)) == MAP_FAILED)
+    if ((regs = (WzTim1Regs*)mmap(NULL, sizeof(WzTim1Regs), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0)) == MAP_FAILED)
     {
         printf("Mapping failed.\n");
         return 1;
     }
 
-    regs->divh = 0x0;
-    regs->divl = time;
+    // turn off interrupts
+    regs->stat = 0;
 
-    for (i = 1; i <= loops_count; i++)
+    // load timer period
+    regs->divh = period >> 32;
+    regs->divl = period & 0xffffffff;
+
+    for (i = 1; i <= loop_count; i++)
     {
-        while(((regs->stat) & 0x80000000) == 0x80000000);
-        cur_time = regs->cntl;
-        printf("%d %d\n", i, cur_time);
+        // wait until 31th bit is set (busy-waiting)
+        while((regs->stat & 0x80000000) != 0x80000000)
+            ;
+
+        // read from registers time passed
+        time_passed = regs->cntl;
+        time_passed = time_passed + (regs->cnth << 32);
+
+        printf("%u %lu\n", i, time_passed);
+
+        // tell timer we got informed about last tic
         regs->cntl = 0x0;
     }
 
+    // turn off timer
+    regs->divh = 0x0;
     regs->divl = 0x0;
-    munmap(NULL, 0x1000);
+
+    // clean up
+    munmap(NULL, sizeof(WzTim1Regs));
     close(fd);
 }
+
 

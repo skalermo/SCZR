@@ -25,17 +25,17 @@ int main(int argc, char *argv[])
 
     
     uint64_t period;         // nanoseconds 
-    uint64_t cur_time;
-    int loops_count;
+    uint64_t time_passed;
+    int loop_count;
 
     if (argc != 3)
     {
         printf("Usage: %s period loops_count\n", argv[0]);
         return 0;
-    } else {
-        period = atoi(argv[1]);
-        loops_count = atoi(argv[2]);
     }
+
+    period = strtoul(argv[1], NULL, 0);
+    loop_count = atoi(argv[2]);
     
     if ((fd = open("/dev/my_tim0", O_RDWR | O_SYNC)) < 0)
     {
@@ -45,16 +45,12 @@ int main(int argc, char *argv[])
 
     write(fd, &period, 8);
 
-    for (i = 1; i <= loops_count; i++)
+    for (i = 1; i <= loop_count; i++)
     {
-        read(fd, &cur_time, 8);
-        printf("%d %d\n", i, cur_time);
+        read(fd, &time_passed, 8);
+        printf("%u %lu\n", i, time_passed);
     }
 
-    // no need to turn timer off
-    // driver takes care of it
-    // time = 0;
-    // write(fd, &time, sizeof(time));
     close(fd);
 }
 
