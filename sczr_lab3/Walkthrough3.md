@@ -93,11 +93,79 @@ Gdzie znaleźć skompilowane pakiety:
 **user-sysbus-tim1**:
 .../bin/packages/aarch64_generic/sczr/user-sysbus-tim1_1_aarch64_generic.ipk
 
+Na koniec należy przerzucić pakiety do maszyny wirtualnej i zainstalować je.
+
 #### Ewentualne błędy kompilacji
 
 Radzę nie dotykać niczego w katalogu cw3_owrt_pkg poza plikami user_tim1.c oraz user_tim2.c.
 Także jeśli mimo to występują błędy upewnijcie się, że:
-- kod źródłowy (pliki user_tim1.c oraz user_tim2.c) nie zawiera błędów składniowych
+- kod źródłowy (pliki user_tim1.c oraz user_tim2.c) nie zawiera błędów
 - poprawnie wpisywaliście polecenia
 
+## Badania wpływu sposobu obsługi oraz obciążenia systemu na opóźnienie obsługi timera
+
+Przy pełnym wykorzystaniu sterownika timer co każdy okres zgłasza przerwanie: "...Odczyt z pliku blokuje proces czytający, dopóki nie upłynie okres timera i nie zostanie zgłoszone przerwanie..."
+
+Natomiast przy minimalnym wsparciu sterownika (realizujemy obsługę ręcznie w programie) wyłączamy przerwania, wykorzystujemy oczekiwanie aktywne.
+
+Jako przykład zbadamy opóźnienia timera na **maszynie jednoprocesorowej**
+
+**Ważne**: przy każdym nowym uruchomieniu maszyny wirtualnej należy należy do jej kernela dodawać moduł naszego sterownika prostym poleceniem:
+
+```console
+root@OpenWrt:/# modprobe drv-sysbus-tim1
+[   43.520729] Connected IRQ=37
+[   43.522871] Connected registers at 900a000
+[   43.527942] <1>Successful registration. The major device number is 251.
+[   43.530638] Witam serdecznie
+```
+
+Robimy to po to by nasze urządzenie `my_tim0` pojawiło w katalogu /dev.
+
+Teraz możemy przystąpić do zadania.
+
+Uruchamiamy programy na maszynie jednoprocesorowej przy zerowym obciążeniu (uruchomionych programów `gen_load1`).
+
+```console
+root@OpenWrt:/# user_tim1 100000 1000 > tim1_proc1_load0
+root@OpenWrt:/# user_tim2 100000 1000 > tim2_proc1_load0
+```
+
+Możemy skorzystać z przygotowanych skryptów:
+
+- znajdziemy średni czas opóźnienia:
+
+```console
+$ python calc_avg.py tim1_proc1_load0 tim2_proc1_load0
+file: tim1_proc1_load0, lines: 1000, avg: 60573.075
+file: tim2_proc1_load0, lines: 1000, avg: 23185.852
+```
+
+- oraz zbudujemy wykresy:
+```console
+$ python hist_nonoverlapping.py tim1_proc1_load0 tim2_proc1_load0
+```
+![nonoverlapping](/sczr_lab3/img/chart.png)
+
+```console
+$ python hist_transparent.py tim1_proc1_load0 tim2_proc1_load0
+```
+![nonoverlapping](/sczr_lab3/img/chart(1).png)
+
+Wnioski i resztę zadania pozostawiam do samodzielnego wykonania.
+
+Dodam tylko, że przy małym obciążeniu (niż np przy uruchomionym `gen_load1`) procesor przechodzi w tryb oszczędzania energii co skutkuje mniejszą częstotliwością działania, a więc mamy większy czas opóźnienia. Ważne jest uwzględnić to przy napisaniu wniosków.
+
+
+### Zbadanie wpływu parametrów szeregowania procesów na opóźnienie obsługi timera
+
+Jednym ze sposobów zmiany szeregowania procesów jest zmiana priorytetu procesu. Aby to zrobić możemy skorzystać z polecenia systemowego [`nice`](https://linux.die.net/man/1/nice). Więcej na temat tego jak się ma parametr `nice` do priorytetu procesu możecie przeczytać np [tutaj](https://askubuntu.com/questions/656771/process-niceness-vs-priority).
+
+Przykład:
+Uruchomić program user_tim1 przy okresie timera 100,000 nanosekund oraz 200 pętli obiegu ustawiając parametr nice na -20.
+
+```console
+$ nice -20 user_tim1 100000 200
+
+```
 
